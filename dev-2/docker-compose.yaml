@@ -1,0 +1,33 @@
+version: '3'
+services:
+  nginx:
+    expose:
+      - 80
+    image: "nginx:1.9"
+    volumes:
+      - ./nginx/:/etc/nginx/conf.d:ro
+    networks:
+      compartida:
+        aliases:
+          - nginx-dev-2
+      dev-2:
+    restart: always
+
+  service-a:
+    image: "httpd:2.4"
+    volumes:
+      - ./sources/service-a/:/usr/local/apache2/htdocs/
+    networks:
+      dev-2:
+  service-b:
+    image: "httpd:2.4"
+    volumes:
+      - ./sources/service-b/:/usr/local/apache2/htdocs/
+    networks:
+      dev-2:
+
+networks:
+  compartida:
+    external: true
+  dev-2:
+    driver: bridge
